@@ -5,7 +5,47 @@ plugins:
     help: {}
     rate-limit: {}
     locales: {}
-    commands: {}
+    commands:
+      申请头衔:
+        config:
+          authority:
+            $switch:
+              branches:
+                - case: null
+                  then: null
+              default: 1
+      禁言:
+        config:
+          authority: 1
+      解除禁言:
+        config:
+          authority: 3
+      manager:
+        aliases:
+          - m
+      来张色图:
+        aliases:
+          - img
+      beauty-img:
+        name: /今日美女
+      sign:
+        name: /举牌
+      r-wallpaper:
+        name: /二刺猿
+      tiangou-word:
+        name: /每日卑微
+      twdne:
+        name: /头像
+      rryth:
+        config:
+          authority: 0
+        aliases:
+          - rr
+          - sai
+      todaybizhi:
+        name: /壁纸
+        aliases:
+          - 10张壁纸
     ~admin: {}
     ~bind: {}
   group:console:
@@ -25,12 +65,13 @@ plugins:
     sandbox: {}
     status: {}
   group:database:
-    $collapsed: true
     database-sqlite: {}
-    ~database-mysql: {}
+    database-mysql:
+      password: qwertyuiop0928..
     ~database-mongo: {}
     assets-local: {}
   group:adapter:
+    $collapsed: true
     ~adapter-discord: {}
     adapter-onebot:7vmvp1:
       gocqhttp:
@@ -43,13 +84,19 @@ plugins:
       message:
         report-self-message: true
   gpt:o9kfgw: {}
+  qqgroup-manager:vlpwhd: {}
+  '@rinkuto/pixiv:m3qkse': {}
+  human-sign:padmev: {}
+  instagram-image-video-downloader:guvy7m: {}
+  beauty-img:yihu7d: {}
+  shunkouliu-word:xhelho: {}
+  saohua-word:rzisok: {}
+  tiangou-word:z01f6i: {}
+  rryth:hysxf8: {}
+  todaybizhi-img:fefloz: {}
 prefix:
   $switch:
     branches:
       - case: null
-        then:
-          - ''
     default: []
-nickname:
-  - 雾纱
-  - .c
+nickname: []

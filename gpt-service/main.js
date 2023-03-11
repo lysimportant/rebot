@@ -23,6 +23,9 @@ const context = {};
 
 let arr = arrBack;
 router.get("/", async function (ctx) {
+  console.log(ctx.query.content);
+  console.log(ctx.query.id);
+  if (!ctx.query.content) return;
   // ctx.query.content
   if (!context[ctx.query.id]) {
     context[ctx.query.id] = [
@@ -42,7 +45,6 @@ router.get("/", async function (ctx) {
     }, 2000);
     return;
   }
-  console.log("first context[ctx.query.id]: ", context, context[ctx.query.id]);
   // fs.writeFile("./logs/" + ctx.query.id + ".txt", JSON.stringify(context));
   const res = await request("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -53,7 +55,7 @@ router.get("/", async function (ctx) {
     }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer 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`,
+      Authorization: `Bearer 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`,
     },
     dispatcher: new ProxyAgent("http://127.0.0.1:7890"),
   });
@@ -65,78 +67,6 @@ router.get("/", async function (ctx) {
   ctx.body = str;
 });
 
-router.get("/tts", async function (ctx) {
-  const res = await request("https://tsn.baidu.com/text2audio", {
-    method: "POST",
-    body: JSON.stringify(
-      {
-        tex: "你好百度",
-        tok: "24.6994bb63d7b18470a1e7e8a445b2fb10.2592000.1680799934.282335-31054989",
-        cuid: "2QjKFsIgjD3jLTmM7T4GhGWL",
-        ctp: 1,
-        lan: "zh",
-        aue: 3,
-        spd: 5,
-        vol: 3,
-        per: 6,
-        pit: 5,
-      },
-      {
-        Headers: {
-          "Content-Type": "audio/mp3",
-        },
-      }
-    ),
-  });
-
-  const mydata = res.body._readableState.buffer.head.data;
-});
-
-router.get("/stram", async function (ctx) {
-  // ctx.query.content
-  arr.push({ role: "user", content: ctx.query.content });
-  console.log(arr);
-  const res = await request("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      messages: arr,
-      temperature: 0.6,
-      stream: true,
-    }),
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer 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`,
-    },
-    dispatcher: new ProxyAgent("http://127.0.0.1:7890"),
-  });
-
-  const completion = await res.body.text();
-  const items = completion
-    .split("\n")
-    .map((item) => {
-      if (item != "") {
-        item = item.replace("data: ", "");
-        console.log(item);
-        if (!item.startsWith("[")) {
-          const itemy = JSON.parse(item);
-          return itemy;
-        }
-      }
-    })
-    .filter((item) => item)
-    .map((item) => {
-      return item.choices[0].delta;
-    });
-  let str = "";
-  items.forEach((item) => {
-    console.log(item);
-    item.content && (str += item.content);
-  });
-  console.log(str);
-  console.log(arr);
-  ctx.body = str;
-});
 app.use(router.routes());
 app.use(router.allowedMethods());
 app.listen(8800);
